@@ -2,16 +2,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Class that handles pizzas
-public class Pizza {
-    private int id;
+public class Pizza implements Comparable<Pizza>{
+    private int pizzaId;
     private String name;
     private double price;
-    private List<String> toppings;
+    private String toppings;
 
-    public Pizza(int id, String name, double price, List<String> toppings) {
-        this.id = id;
+    public Pizza(int pizzaId, String name, double price, String toppings) {
+        this.pizzaId = pizzaId;
         this.name = name;
         this.price = price;
         this.toppings = toppings;
     }
+    public int getPizzaId() {
+        return pizzaId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getToppings() {
+        return toppings;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Pizza{" +
+                "pizzaId=" + pizzaId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", toppings='" + toppings + '\'' +
+                '}';
+    }
+    @Override
+    public int compareTo(Pizza other){
+        return this.pizzaId - other.pizzaId;
+    }
+
+    @Override
+    public boolean equals(Object other){
+        if(other == null || !(other instanceof Pizza)){
+            return false;
+        }
+        Pizza otherPizza = (Pizza) other;
+        return this.pizzaId == otherPizza.pizzaId;
+    }
 }
+
+
+

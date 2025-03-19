@@ -36,58 +36,12 @@ public class Order implements Comparable<Order> {
         this.costumerPhone = costumerPhone;
     }
 
-    public void addOrder(Pizza order){
-        pizzasOrdered.add(order);
-    }
-
-    public String getPickUpTime(){
-        return pickUpTime;
-    }
-    public int getOrderId(){
-        return orderId;
-    }
-
-    public int getCostumerPhone() {
-        return costumerPhone;
-    }
-
-    public static int getOrderCount() {
-        return orderCount;
-    }
-
-    public void setCostumerPhone(int costumerPhone) {
-        this.costumerPhone = costumerPhone;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public static void setOrderCount(int orderCount) {
-        Order.orderCount = orderCount;
-    }
-
-    public void setPickUpTime(String pickUpTime) {
-        this.pickUpTime = pickUpTime;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-
-
+    //TODO tilføj at hvis 2 eller flere af den samme pizza skal laves, så print fx: "2 x Cacciatore"
     @Override
     public String toString() {
         String pizzasOrderedDisplay = "";
 
         for(Pizza pizza : pizzasOrdered){
-
-
             pizzasOrderedDisplay += "\n\t" + pizza.getName();
         }
 
@@ -102,6 +56,40 @@ public class Order implements Comparable<Order> {
     @Override
     public int compareTo(Order other){
         return this.pickUpTime.compareTo(other.pickUpTime);
+    }
+
+    public void addOrder(Pizza order){
+        pizzasOrdered.add(order);
+    }
+    public String getPickUpTime(){
+        return pickUpTime;
+    }
+    public int getOrderId(){
+        return orderId;
+    }
+    public int getCostumerPhone() {
+        return costumerPhone;
+    }
+    public static int getOrderCount() {
+        return orderCount;
+    }
+    public void setCostumerPhone(int costumerPhone) {
+        this.costumerPhone = costumerPhone;
+    }
+    public String getCustomerName() {
+        return customerName;
+    }
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+    public static void setOrderCount(int orderCount) {
+        Order.orderCount = orderCount;
+    }
+    public void setPickUpTime(String pickUpTime) {
+        this.pickUpTime = pickUpTime;
+    }
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
 

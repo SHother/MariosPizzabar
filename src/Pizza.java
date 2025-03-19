@@ -14,22 +14,19 @@ public class Pizza implements Comparable<Pizza>{
         this.price = price;
         this.toppings = toppings;
     }
+
     public int getPizzaId() {
         return pizzaId;
     }
-
     public String getName() {
         return name;
     }
-
     public double getPrice() {
         return price;
     }
-
     public String getToppings() {
         return toppings;
     }
-
 
     @Override
     public String toString() {

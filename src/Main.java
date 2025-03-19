@@ -10,7 +10,6 @@ public class Main {
     public static void main(String[] args) {
         createPizzas();
         //FileHandler fileHandler = new FileHandler();
-
         //menu = fileHandler.getMenu();
 
         while (true) {
@@ -96,6 +95,7 @@ public class Main {
         System.out.println("Skriv tidspunkt for afhenting: ");
         String pickUpTime = scanner.nextLine();
 
+        //TODO kommentar på order
 
         Order newOrder = new Order(customerName, pizzasOrdered, pickUpTime, costumerPhone);
         System.out.println(newOrder
@@ -138,7 +138,6 @@ public class Main {
         } else {
             System.out.println("Ingen ordre fundet med ID " + orderId + ".");
         }
-
     }
 
     public static void showMenu() {

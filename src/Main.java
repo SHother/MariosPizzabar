@@ -1,45 +1,38 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class Main {
 
-    public static ArrayList<Order> activeOrders = new ArrayList<>();
-    public static ArrayList<Pizza> pizzas = new ArrayList<>();
+    private static ArrayList<Order> activeOrders = new ArrayList<>();
+    private static ArrayList<Pizza> pizzas = new ArrayList<>();
+    private static ArrayList<Pizza> menu = new ArrayList<>();
 
     public static void main(String[] args) {
-        Pizza pizza = new Pizza(1, "Margherita", 120, "Pep, Dress");
-        ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
-        pizzasOrdered.add(pizza);
-        Order testOrder1 = new Order("Søren", pizzasOrdered, true, 101010, "05.10.2010 12:12", 12345678);
-        Order testOrder2 = new Order("Søren", pizzasOrdered, true, 101010, "06.10.2010 12:56", 12345678);
-        Order testOrder3 = new Order("Søren", pizzasOrdered, true, 101010, "05.10.2010 11:12", 12345678);
-        Order testOrder4 = new Order("Søren", pizzasOrdered, true, 101010, "06.10.2010 00:56", 12345678);
+        createPizzas();
+        //FileHandler fileHandler = new FileHandler();
 
-//        System.out.print(testOrder1);
+        //menu = fileHandler.getMenu();
 
-
-        activeOrders.add(testOrder1);
-        activeOrders.add(testOrder2);
-        activeOrders.add(testOrder3);
-        activeOrders.add(testOrder4);
-        /*
-        System.out.println(orders);
-        orders.sort(null);
-        System.out.println(orders);
-        */
-        displayOrders();
+        while (true) {
+            run();
+        }
     }
 
 
     //1. opret order, 2. fjern ordre, 3. se ordre, 4. se sorteret mest købte pizzaer,
 
     public static void run() {
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("\n--- Menu ---");
+        System.out.println("vælg:" +
+                "\nOpret order tast 1" +
+                "\nFjern Order tast 2" +
+                "\nSe ordre tast 3" +
+                "\nSe mest købte pizzaer tast 4");
 
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = getValidInt(scanner);
         //TODO take input and validate that it is an int
-        int choice = 0;
 
         switch (choice) {
             case 1:
@@ -50,35 +43,39 @@ public class Main {
                 break;
             case 3:
                 displayOrders();
+                break;
+
+            case 4:
+                //TODO display most sold pizza
         }
     }
 
     public static void displayOrders() {
         Collections.sort(activeOrders,
-                (o1, o2) -> o1.getpickUpTime().compareTo(o2.getpickUpTime()));
+                (o1, o2) -> o1.getPickUpTime().compareTo(o2.getPickUpTime()));
 
         for (Order order : activeOrders) {
             System.out.println(order);
         }
     }
 
+
     //TODO
     public static void createOrder(Scanner scanner) {
         ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
-        //Should promt the user (alfonso) to give the requiered info to create a new Order
 
         System.out.println("Skriv kundens navn: ");
+        scanner.nextLine();
         String customerName = scanner.nextLine();
 
+
         System.out.println("Skriv kundens telefonnummer: ");
-        int phoneNumber = getValidInt(scanner);
+        int costumerPhone = getValidInt(scanner);
 
 
         System.out.print("Vælg pizzaer, adskilt af mellemrum");
-
+        scanner.nextLine();
         String pizzaChoice = scanner.nextLine();
-
-        //Lav om så man indtager en pizza ad gangen
 
         //TODO validate input
         int[] arr = Arrays.stream(pizzaChoice.split(" "))
@@ -86,71 +83,98 @@ public class Main {
                 .toArray();
 
 
-
-
-            //loop thorugh array of pizza id's and add to pizzasOrdered
-
-          for (int i = 0; i < arr.length; i++) {
+        //loop thorugh array of pizza id's and add to pizzasOrdered
+        for (int i = 0; i < arr.length; i++) {
             int a = arr[i];
 
-            for (Pizza pizza : pizzas) {
-                if (pizza.getPizzaId() == a) {
-                    pizzasOrdered.add(pizza);
-                }
-            }
+            Optional<Pizza> foundPizza = pizzas.stream()
+                    .filter(p -> p.getPizzaId() == a)
+                    .findFirst();
+            foundPizza.ifPresent(pizzasOrdered::add);
         }
 
-        //TODO rabat og pickUp
-        int price = 0;
-        String pickUpTime = "";
+        System.out.println("Skriv tidspunkt for afhenting: ");
+        String pickUpTime = scanner.nextLine();
 
 
-        scanner.nextLine(); // Håndter newline
+        Order newOrder = new Order(customerName, pizzasOrdered, pickUpTime, costumerPhone);
+        System.out.println(newOrder
+                + "\nEr orderen korrekt ? (Y/N)");
 
-
-        System.out.print("Er bestillingen in-house? (true/false): ");
-        boolean inHouse = scanner.nextBoolean();
-        scanner.nextLine(); // Håndter newline
-
-
-        Order newOrder = new Order(customerName, pizzasOrdered, inHouse, price, pickUpTime, phoneNumber);
-        activeOrders.add(newOrder);
+        if(scanner.nextLine().equalsIgnoreCase("Y")) {
+            activeOrders.add(newOrder);
+            System.out.println("Ordre er tilføjet");
+        } else {
+            System.out.println("Order ikke tilføjet. ");
+        }
     }
 
     //TODO
     public static void removeOrder(Scanner scanner) {
         //Should request input for the ID of and active order and then remove that order
+        System.out.println("Indtast ordre-ID for at fjerne en ordre: ");
+
+        int orderId;
+        while (true) {
+            if (scanner.hasNextInt()) {
+                orderId = getValidInt(scanner);
+                scanner.nextLine(); // Håndterer newline
+                break;
+            } else {
+                System.out.println("Ugyldigt input. Indtast et gyldigt ordre-ID.");
+                scanner.next(); // Forbruger ugyldigt input
+            }
+        }
+
+        // Finder ordren med det givne ordre-ID
+        Optional<Order> orderToRemove = activeOrders.stream()
+                .filter(order -> order.getOrderId() == orderId)
+                .findFirst();
+
+        // Fjerner ordren, hvis den findes
+        if (orderToRemove.isPresent()) {
+            activeOrders.remove(orderToRemove.get());
+            System.out.println("Ordren med ID " + orderId + " er blevet fjernet.");
+        } else {
+            System.out.println("Ingen ordre fundet med ID " + orderId + ".");
+        }
+
     }
 
-    //TODO
     public static void showMenu() {
         System.out.println("\n--- Pizzamenu ---");
         for (Pizza pizza : pizzas) {
             System.out.println(pizza.getPizzaId() + ": " + pizza.getName() + " - " + pizza.getPrice() + "kr. (" + pizza.getToppings() + ")");
+        }
     }
-}
 
     //TODO Create a method that scans the terminal for a new line and returns an int if one is found
     //if no int is found, promt the user to give a valid int
-    public static int getValidInt(Scanner scanner){
-        return 0;
+    public static int getValidInt (Scanner scanner){
+        scanner.nextLine();
+        while (!scanner.hasNextInt()){
+            System.out.println("Not a valid number. Try again:");
+            scanner.nextLine();
+        }
+        return scanner.nextInt();
     }
 
     //TODO
-    public static void showStartMessage(){}
+    public static void showStartMessage () {
+    }
 
     //TODO
-    public static int showTotalNumOfOrders(){
+    public static int showTotalNumOfOrders () {
         return 0;
     }
 
     //TODO takes the id of a specific pizza and return the number of pizzas sold of that type
-    public static int pizzasSold(int pizzaID){
+    public static int pizzasSoldofType (int pizzaID){
         return 0;
     }
 
     //Creates an Array of the Pizzas on the menu for use in the program
-    public static void createPizzas(){
+    public static void createPizzas () {
         pizzas.add(new Pizza(1, "Vesuvio", 57, "tomatsauce, ost, skinke, oregano"));
         pizzas.add(new Pizza(2, "Amerikaner", 53, "tomatsauce, ost, oksefars, oregano"));
         pizzas.add(new Pizza(3, "Cacciatore", 57, "tomatsauce, ost, pepperoni, oregano"));
@@ -166,6 +190,4 @@ public class Main {
         pizzas.add(new Pizza(13, "Venezia", 61, "tomatsauce, ost, bacon, oregano"));
         pizzas.add(new Pizza(14, "Mafia", 61, "tomatsauce, ost, pepperoni, bacon, løg, oregano"));
     }
-
-
 }

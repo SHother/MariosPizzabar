@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 
 public class FileHandler {
     private final String menuFilename = "Menu.txt";
@@ -10,7 +10,6 @@ public class FileHandler {
     //TODO
     //Should add one order to the file
     public void saveOrder(Order order){
-
     }
 
     //TODO
@@ -23,27 +22,23 @@ public class FileHandler {
         return null;
     }
 
-
-
-
 }
-
+*/
 
 /*
-
 import java.io.*;
 import java.util.ArrayList;
 
-public class FileReader {
+public class FileHandler {
     private final String menuFilename = "Menu.txt";
     private final String ordersFilename = "Orders.txt";
 
-    public FileReader() {}
+    public FileHandler() {}
 
     // Læs gamle ordrer fra filen
     public ArrayList<Order> getOldOrders() {
         ArrayList<Order> orders = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new java.io.FileReader(ordersFilename))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ordersFilename))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
@@ -54,14 +49,13 @@ public class FileReader {
                     double price = Double.parseDouble(data[3]);
                     String pickUpTime = data[4];
 
-                    // Læs bestilte pizzaer (data[5] er en liste af pizza-navne, adskilt af ;)
                     ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
                     String[] pizzaNames = data[5].split(";");
                     for (String pizzaName : pizzaNames) {
-                        pizzasOrdered.add(new Pizza(pizzaName, 0)); // Prisen er ukendt her
+                        pizzasOrdered.add(new Pizza(pizzaName.trim(), 0)); // Prisen er ukendt her
                     }
 
-                    orders.add(new Order(orderId, customerName, pizzasOrdered, inHouse, price, pickUpTime));
+                    orders.add(new Order(customerName, pizzasOrdered, inHouse, pickUpTime, 0));
                 }
             }
         } catch (IOException e) {
@@ -73,13 +67,13 @@ public class FileReader {
     // Læs pizzamenuen fra filen
     public ArrayList<Pizza> getMenu() {
         ArrayList<Pizza> menu = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new java.io.FileReader(menuFilename))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(menuFilename))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data.length == 2) {
-                    String name = data[0];
-                    double price = Double.parseDouble(data[1]);
+                    String name = data[0].trim();
+                    double price = Double.parseDouble(data[1].trim());
                     menu.add(new Pizza(name, price));
                 }
             }
@@ -92,17 +86,19 @@ public class FileReader {
     // Gem en ordre i filen
     public void saveOrder(Order order) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ordersFilename, true))) {
-            // Konverter pizza-listen til en string med ; mellem pizza-navne
             StringBuilder pizzaNames = new StringBuilder();
             for (Pizza pizza : order.pizzasOrdered) {
                 pizzaNames.append(pizza.getName()).append(";");
             }
+            if (pizzaNames.length() > 0) {
+                pizzaNames.setLength(pizzaNames.length() - 1); // Fjern sidste ;
+            }
 
             bw.write(order.getOrderId() + "," +
                     order.getCustomerName() + "," +
-                    order.inHouse + "," +
+                    order.getInHouse() + "," +
                     order.price + "," +
-                    order.getpickUpTime() + "," +
+                    order.getPickUpTime() + "," +
                     pizzaNames);
             bw.newLine();
         } catch (IOException e) {
@@ -110,4 +106,4 @@ public class FileReader {
         }
     }
 }
- */
+*/

@@ -1,0 +1,5 @@
+1,840.0,1845,Vesuvio;Amerikaner;Cacciatore;Carbonara;Dennis;Bertil;Silvia;Victoria;Toronto;Capricciosa;Hawaii;Le Blissola;Venezia;Mafia
+1,840.0,1845,Vesuvio;Amerikaner;Cacciatore;Carbonara;Dennis;Bertil;Silvia;Victoria;Toronto;Capricciosa;Hawaii;Le Blissola;Venezia;Mafia
+1,840.0,1845,Vesuvio;Amerikaner;Cacciatore;Carbonara;Dennis;Bertil;Silvia;Victoria;Toronto;Capricciosa;Hawaii;Le Blissola;Venezia;Mafia
+3,840.0,1845,Vesuvio;Amerikaner;Cacciatore;Carbonara;Dennis;Bertil;Silvia;Victoria;Toronto;Capricciosa;Hawaii;Le Blissola;Venezia;Mafia
+2,840.0,0145,Vesuvio;Amerikaner;Cacciatore;Carbonara;Dennis;Bertil;Silvia;Victoria;Toronto;Capricciosa;Hawaii;Le Blissola;Venezia;Mafia

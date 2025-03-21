@@ -129,7 +129,7 @@ public class FileHandler {
             System.err.println("Fejl ved lagring af ordre: " + e.getMessage()); // Fejlbesked hvis noget går galt
         }
     }
-    
+
     public ArrayList<Order> readActiveOrders(){
         ArrayList<Order> allActiveOrders = new ArrayList<>();
 

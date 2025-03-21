@@ -14,7 +14,8 @@ public class Main {
         //reads any potential active orders after a "potential" crash
         activeOrders = fileHandler.readActiveOrders();
         System.out.println(activeOrders);
-
+        activeOrders.sort(null);
+        System.out.println(activeOrders);
 
 
         //fileHandler.saveActiveOrders(testOrder);
@@ -33,11 +34,12 @@ public class Main {
         System.out.println("\n--- Menu ---");
         System.out.println("vælg:" +
                 "\nOpret order tast 1" +
-                "\nFjern Order tast 2" +
+                "\nFjern order tast 2" +
                 "\nSe ordre tast 3" +
                 "\nSe mest købte pizzaer tast 4"+
                 "\nudlever ordre tast 5");
 
+        //TODO udlever order
 
         FileHandler fileHandler = new FileHandler();
         Scanner scanner = new Scanner(System.in);
@@ -73,8 +75,6 @@ public class Main {
     }
 
 
-
-
     //TODO add comment option
     public static void createOrder(Scanner scanner, FileHandler fileHandler) {
         ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
@@ -107,7 +107,7 @@ public class Main {
                     .findFirst();
             foundPizza.ifPresent(pizzasOrdered::add);
         }
-
+        //TODO lav sådan at hvis indtastet 145 bliver til 0145
         System.out.println("Skriv tidspunkt for afhenting: ");
         String pickUpTime = scanner.nextLine();
 

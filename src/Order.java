@@ -64,6 +64,11 @@ public class Order implements Comparable<Order> {
     public String getPickUpTime(){
         return pickUpTime;
     }
+
+    public double getPrice() {
+        return price;
+    }
+
     public int getOrderId(){
         return orderId;
     }
@@ -90,6 +95,10 @@ public class Order implements Comparable<Order> {
     }
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public ArrayList<Pizza> getPizzasOrdered() {
+        return pizzasOrdered;
     }
 }
 

@@ -27,6 +27,9 @@ public class FileHandler {
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * FileHandler klassen håndterer læsning og skrivning af data til filer.
@@ -34,97 +37,37 @@ import java.util.ArrayList;
  */
 public class FileHandler {
     private final String menuFilename = "Menu.txt"; // Filnavn for pizzamenuen
-    private final String ordersFilename = "Orders.txt"; // Filnavn for ordrer
+    private final String ordersCompletedFilename = "OrdersCompleted.txt"; // Filnavn for ordrer
+    private final String activeOrdersFilename = "ActiveOrders.txt";
 
-    /**
-     * Constructor for FileHandler.
-     * Ingen specifik initialisering er nødvendig.
-     */
-    public FileHandler() {}
 
-    /**
-     * Henter gamle ordrer fra Orders.txt og returnerer dem som en liste af Order-objekter.
-     * @return En ArrayList af tidligere ordrer.
-     */
-    public ArrayList<Order> getOldOrders() {
-        ArrayList<Order> orders = new ArrayList<>(); // Liste til at gemme ordrer
-        try (BufferedReader br = new BufferedReader(new FileReader(ordersFilename))) {
-            String line;
-            while ((line = br.readLine()) != null) { // Læs hver linje fra filen
-                String[] data = line.split(","); // Opdel linjen ved kommaer
-
-                // Sikrer at linjen har det rigtige antal elementer
-                if (data.length >= 6) {
-                    int orderId = Integer.parseInt(data[0]); // Konverterer ID til et heltal
-                    String customerName = data[1]; // Kundens navn
-                    boolean inHouse = Boolean.parseBoolean(data[2]); // Om ordren er spisested eller takeaway
-                    double price = Double.parseDouble(data[3]); // Ordrepris
-                    String pickUpTime = data[4]; // Afhentningstidspunkt
-
-                    // Opret liste af bestilte pizzaer
-                    ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
-                    String[] pizzaNames = data[5].split(";"); // Opdel pizza-navne efter semikolon
-                    for (String pizzaName : pizzaNames) {
-                        pizzasOrdered.add(new Pizza(pizzaName.trim(), 0)); // Prisen kendes ikke her
-                    }
-
-                    // Opret en ny ordre og tilføj den til listen
-                    orders.add(new Order(customerName, pizzasOrdered, inHouse, pickUpTime, 0));
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Fejl ved indlæsning af ordrer: " + e.getMessage()); // Fejlbesked hvis noget går galt
-        }
-        return orders; // Returnerer listen af gamle ordrer
+    //Constructor for FileHandler.
+    public FileHandler() {
     }
 
-    /**
-     * Læser pizzamenuen fra Menu.txt og returnerer en liste af Pizza-objekter.
-     * @return En ArrayList af pizzaer med deres navn og pris.
-     */
-    public ArrayList<Pizza> getMenu() {
-        ArrayList<Pizza> menu = new ArrayList<>(); // Liste til at gemme menuens pizzaer
-        try (BufferedReader br = new BufferedReader(new FileReader(menuFilename))) {
-            String line;
-            while ((line = br.readLine()) != null) { // Læs hver linje i menu-filen
-                String[] data = line.split(","); // Opdel linjen i navn og pris
-
-                // Tjek at linjen har præcis to elementer
-                if (data.length == 2) {
-                    String name = data[0].trim(); // Hent pizzanavn og fjern evt. mellemrum
-                    double price = Double.parseDouble(data[1].trim()); // Konverter prisen til double
-                    menu.add(new Pizza(name, price)); // Opret pizza og tilføj til menu-listen
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Fejl ved indlæsning af menu: " + e.getMessage()); // Fejlbesked ved læsefejl
-        }
-        return menu; // Returnerer listen af pizzaer
-    }
 
     /**
-     * Gemmer en ny ordre i Orders.txt.
+     * Gemmer en færgjort ordre i OrdersCompleted.txt.
+     *
      * @param order Ordren, der skal gemmes.
-     */
-    public void saveOrder(Order order) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ordersFilename, true))) {
+     */ //TODO tilføj funktion i main menu at afslutte order
+    public void saveOrderToArchive(Order order) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ordersCompletedFilename, true))) {
             StringBuilder pizzaNames = new StringBuilder(); // Samler pizzanavne i en streng
 
             // Tilføj alle bestilte pizzaer til strengen, adskilt af semikolon
-            for (Pizza pizza : order.pizzasOrdered) {
+            for (Pizza pizza : order.getPizzasOrdered()) {
                 pizzaNames.append(pizza.getName()).append(";");
             }
 
             // Fjern sidste semikolon for at undgå fejl i dataformatet
-            if (pizzaNames.length() > 0) {
+            if (!pizzaNames.isEmpty()) {
                 pizzaNames.setLength(pizzaNames.length() - 1);
             }
 
             // Skriv ordredetaljer til filen
             bw.write(order.getOrderId() + "," +
-                    order.getCustomerName() + "," +
-                    order.getInHouse() + "," +
-                    order.price + "," +
+                    order.getPrice() + "," +
                     order.getPickUpTime() + "," +
                     pizzaNames);
             bw.newLine(); // Gå til næste linje i filen
@@ -132,4 +75,104 @@ public class FileHandler {
             System.err.println("Fejl ved lagring af ordre: " + e.getMessage()); // Fejlbesked hvis noget går galt
         }
     }
+
+    public void updateActiveOrders(ArrayList<Order> activeOrders) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(activeOrdersFilename))) {
+            bw.write("Next Pizza to be made:" + lineBreaker() + "\n");
+        } catch (IOException e) {
+            System.err.println("Fejl ved lagring af ordre: " + e.getMessage()); // Fejlbesked hvis noget går galt
+        }
+
+        for (Order order : activeOrders) {
+            saveOrderToArchive(order);
+        }
+    }
+
+    //TODO sorter efter pickuptime
+    public void saveActiveOrders(Order order) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(activeOrdersFilename, true))) {
+            StringBuilder pizzaNames = new StringBuilder(); // Samler pizzanavne i en streng
+
+            // Tilføj alle bestilte pizzaer til strengen, adskilt af semikolon
+            for (Pizza pizza : order.getPizzasOrdered()) {
+                pizzaNames.append(pizza.getName()).append(";");
+            }
+
+            // Fjern sidste semikolon for at undgå fejl i dataformatet
+            if (!pizzaNames.isEmpty()) {
+                pizzaNames.setLength(pizzaNames.length() - 1);
+            }
+
+            StringBuilder pizzaIDs = new StringBuilder(); // Samler pizzaIDs i en streng
+            for (Pizza pizza : order.getPizzasOrdered()) {
+                pizzaIDs.append(pizza.getPizzaId()).append(";");
+            }
+            if (!pizzaIDs.isEmpty()) {
+                pizzaIDs.setLength(pizzaIDs.length() - 1);
+            }
+
+            // Skriv ordredetaljer til filen
+            bw.write(
+                    "Bestilling ,\n" +
+                    order.getPickUpTime() + ",\n" +
+                    pizzaIDs + ",\n" +
+                    pizzaNames + "," +
+                    order.getOrderId() + "," +
+                    order.getPrice() + "," +
+                    order.getCustomerName() + "," +
+                    order.getCostumerPhone() +
+                    lineBreaker()
+                    //Comment added
+            );
+            bw.newLine(); // Gå til næste linje i filen
+        } catch (IOException e) {
+            System.err.println("Fejl ved lagring af ordre: " + e.getMessage()); // Fejlbesked hvis noget går galt
+        }
+    }
+    
+    public ArrayList<Order> readActiveOrders(){
+        ArrayList<Order> allActiveOrders = new ArrayList<>();
+
+        try(BufferedReader br = new BufferedReader(new FileReader(activeOrdersFilename))) {
+
+            String wholeOrder = br.lines().collect(Collectors.joining());
+            String[] eachOrder = wholeOrder.split("--------------------");
+
+            for (int i = 1; i < eachOrder.length; i++) {
+                String[] orderAttributes = eachOrder[i].split(",");
+                int orderID = Integer.parseInt(orderAttributes[4]);
+                double price = Double.parseDouble(orderAttributes[5]);
+                String pickUpTime = (orderAttributes[1]);
+                String customerName = orderAttributes[6];
+                int costumerPhone = Integer.parseInt(orderAttributes[7]);
+                ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
+
+                int[] arr = Arrays.stream(orderAttributes[2].split(";"))
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
+
+                //loop thorugh array of pizza id's and add to pizzasOrdered
+                for (int a : arr) {
+                    Optional<Pizza> foundPizza = Main.pizzas.stream()
+                            .filter(p -> p.getPizzaId() == a)
+                            .findFirst();
+                    foundPizza.ifPresent(pizzasOrdered::add);
+                }
+                //int id, String name, ArrayList<Pizza> pizzasOrdered, double price, String pickUpTime, int costumerPhone){
+                Order newOrder = new Order(orderID, customerName, pizzasOrdered, price, pickUpTime, costumerPhone);
+                allActiveOrders.add(newOrder);
+            }
+
+        }catch(IOException e){
+            System.err.println("SUM TING WONG, CALL SOREN");
+        }
+        return allActiveOrders;
+    }
+
+    public static String lineBreaker() {
+        return "\n--------------------";
+    }
 }
+
+
+

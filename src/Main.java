@@ -4,21 +4,30 @@ import java.util.stream.Stream;
 public class Main {
 
     private static ArrayList<Order> activeOrders = new ArrayList<>();
-    private static ArrayList<Pizza> pizzas = new ArrayList<>();
-    private static ArrayList<Pizza> menu = new ArrayList<>();
+    public static ArrayList<Pizza> pizzas = new ArrayList<>();
+    private static Order testOrder;
 
     public static void main(String[] args) {
+        FileHandler fileHandler = new FileHandler();
         createPizzas();
-        //FileHandler fileHandler = new FileHandler();
-        //menu = fileHandler.getMenu();
 
+        //reads any potential active orders after a "potential" crash
+        activeOrders = fileHandler.readActiveOrders();
+        System.out.println(activeOrders);
+
+
+
+        //fileHandler.saveActiveOrders(testOrder);
+        //activeOrders.add(testOrder);
+
+        //fileHandler.saveOrderToArchive(testOrder);
         while (true) {
             run();
         }
     }
 
 
-    //1. opret order, 2. fjern ordre, 3. se ordre, 4. se sorteret mest købte pizzaer,
+    //1. opret order, 2. fjern ordre, 3. se ordre, 4. se sorteret mest købte pizzaer, 5. Afslut order
 
     public static void run() {
         System.out.println("\n--- Menu ---");
@@ -26,19 +35,21 @@ public class Main {
                 "\nOpret order tast 1" +
                 "\nFjern Order tast 2" +
                 "\nSe ordre tast 3" +
-                "\nSe mest købte pizzaer tast 4");
+                "\nSe mest købte pizzaer tast 4"+
+                "\nudlever ordre tast 5");
 
 
+        FileHandler fileHandler = new FileHandler();
         Scanner scanner = new Scanner(System.in);
         int choice = getValidInt(scanner);
         //TODO take input and validate that it is an int
 
         switch (choice) {
             case 1:
-                createOrder(scanner);
+                createOrder(scanner, fileHandler);
                 break;
             case 2:
-                removeOrder(scanner);
+                removeOrder(scanner,fileHandler);
                 break;
             case 3:
                 displayOrders();
@@ -46,6 +57,9 @@ public class Main {
 
             case 4:
                 //TODO display most sold pizza
+            case 5:
+
+                break;
         }
     }
 
@@ -59,8 +73,10 @@ public class Main {
     }
 
 
-    //TODO
-    public static void createOrder(Scanner scanner) {
+
+
+    //TODO add comment option
+    public static void createOrder(Scanner scanner, FileHandler fileHandler) {
         ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
 
         System.out.println("Skriv kundens navn: ");
@@ -103,14 +119,16 @@ public class Main {
 
         if(scanner.nextLine().equalsIgnoreCase("Y")) {
             activeOrders.add(newOrder);
+            fileHandler.saveActiveOrders(newOrder);
             System.out.println("Ordre er tilføjet");
+
         } else {
             System.out.println("Order ikke tilføjet. ");
         }
     }
 
     //TODO
-    public static void removeOrder(Scanner scanner) {
+    public static void removeOrder(Scanner scanner, FileHandler fileHandler) {
         //Should request input for the ID of and active order and then remove that order
         System.out.println("Indtast ordre-ID for at fjerne en ordre: ");
 
@@ -134,10 +152,12 @@ public class Main {
         // Fjerner ordren, hvis den findes
         if (orderToRemove.isPresent()) {
             activeOrders.remove(orderToRemove.get());
+
             System.out.println("Ordren med ID " + orderId + " er blevet fjernet.");
         } else {
             System.out.println("Ingen ordre fundet med ID " + orderId + ".");
         }
+
     }
 
     public static void showMenu() {
@@ -188,5 +208,7 @@ public class Main {
         pizzas.add(new Pizza(12, "Le Blissola", 61, "tomatsauce, ost, skinke, rejer, oregano"));
         pizzas.add(new Pizza(13, "Venezia", 61, "tomatsauce, ost, bacon, oregano"));
         pizzas.add(new Pizza(14, "Mafia", 61, "tomatsauce, ost, pepperoni, bacon, løg, oregano"));
+        testOrder = new Order("thais", pizzas, "1845", 22101213);
+
     }
 }

@@ -1,0 +1,17 @@
+Next Pizza to be made:
+--------------------
+Bestilling ,
+1900,
+1;2;3,
+Vesuvio;Amerikaner;Cacciatore,2,167.0,thais,123123
+--------------------
+Bestilling ,
+0145,
+3;4;5,
+Cacciatore;Carbonara;Dennis,3,185.0,thais,123123
+--------------------
+Bestilling ,
+2222,
+6;7;8,
+Bertil;Silvia;Victoria,4,179.0,thais,123123
+--------------------

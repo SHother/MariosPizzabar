@@ -31,13 +31,13 @@ public class Main {
     //1. opret order, 2. fjern ordre, 3. se ordre, 4. se sorteret mest købte pizzaer, 5. Afslut order
 
     public static void run() {
-        System.out.println("\n--- Menu ---");
-        System.out.println("vælg:" +
-                "\nOpret order tast 1" +
-                "\nFjern order tast 2" +
-                "\nSe ordre tast 3" +
-                "\nSe mest købte pizzaer tast 4"+
-                "\nudlever ordre tast 5");
+        System.out.println("\nMario's Pizzabar ");
+        System.out.println("1. Opret ny ordre");
+        System.out.println("2. Fjern ordre");
+        System.out.println("3. Se aktive ordrer");
+        System.out.println("4. Se mest købte pizzaer");
+        System.out.println("5. Marker ordre som udleveret");
+        System.out.print("Vælg en mulighed: ");
 
         //TODO udlever order
 

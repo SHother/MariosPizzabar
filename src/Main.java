@@ -127,6 +127,8 @@ public class Main {
         }
     }
 
+    //TODO update ordercount based on activeOrderArchive
+
     //TODO
     public static void removeOrder(Scanner scanner, FileHandler fileHandler) {
         //Should request input for the ID of and active order and then remove that order

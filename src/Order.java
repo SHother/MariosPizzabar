@@ -11,6 +11,7 @@ import static java.lang.String.format;
 
 //Class that handles the specific orders
 public class Order implements Comparable<Order> {
+
     private static int orderCount = 1;
     private int orderId;
     private String customerName;

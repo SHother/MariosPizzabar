@@ -39,12 +39,12 @@ public class Main {
         System.out.println("5. Marker ordre som udleveret");
         System.out.print("Vælg en mulighed: ");
 
-        //TODO udlever order
+
 
         FileHandler fileHandler = new FileHandler();
         Scanner scanner = new Scanner(System.in);
         int choice = getValidInt(scanner);
-        //TODO take input and validate that it is an int
+
 
         switch (choice) {
             case 1:
@@ -58,9 +58,11 @@ public class Main {
                 break;
 
             case 4:
-                //TODO display most sold pizza
+                displayMenu();
+                break;
             case 5:
-
+                //TODO test deliver order
+                deliverOrder(scanner, fileHandler);
                 break;
         }
     }
@@ -73,9 +75,47 @@ public class Main {
             System.out.println(order);
         }
     }
+    public static void displayMenu(){
+
+        for (Pizza pizza : pizzas ) {
+            System.out.println(pizza);
+        }
+    }
+
+    //Method for delivering order
+
+    public static void deliverOrder(Scanner scanner, FileHandler fileHandler) {
+        System.out.println("Indtast ordernummer på orderen der er udleveret");
+
+        int a = getValidInt(scanner);
+
+        Optional<Order> foundOrder = activeOrders.stream()
+                .filter(p -> p.getOrderId() == a)
+                .findFirst();
+
+        if (foundOrder.isPresent()) {
+                foundOrder.ifPresent(activeOrders::remove);
+                fileHandler.updateActiveOrders(activeOrders);
+                fileHandler.saveOrderToArchive(foundOrder.get());
+                System.out.println("Order " + foundOrder.get().getOrderId() + " delivered! ");
+        } else {
+            System.out.println("Order not found!");
+        }
+    }
 
 
-    //TODO add comment option
+    public static void resumeOrderCounter() {
+        if (!activeOrders.isEmpty()) {
+            int maxOrderCounter = activeOrders.stream()
+                            .max(Comparator.comparing(Order::getOrderId))
+                            .get().getOrderId();
+            Order.setOrderCount(maxOrderCounter);
+        } else {
+            System.out.println("Ingen aktive ordre fundet ved opstart");
+        }
+    }
+
+
     public static void createOrder(Scanner scanner, FileHandler fileHandler) {
         ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
 
@@ -87,29 +127,49 @@ public class Main {
         System.out.println("Skriv kundens telefonnummer: ");
         int costumerPhone = getValidInt(scanner);
 
+//TODO test om dette virker
+        boolean isPizzaIDsNotValid = true;
+        while (isPizzaIDsNotValid) {
+            isPizzaIDsNotValid = false;
+            System.out.print("Vælg pizzaer, adskilt af mellemrum");
+            scanner.nextLine();
+            String pizzaChoice = scanner.nextLine();
 
-        System.out.print("Vælg pizzaer, adskilt af mellemrum");
-        scanner.nextLine();
-        String pizzaChoice = scanner.nextLine();
+            try {
+                int[] arr = Arrays.stream(pizzaChoice.split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
 
-        //TODO validate input
-        int[] arr = Arrays.stream(pizzaChoice.split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+                //loop thorugh array of pizza id's and add to pizzasOrdered
+                for (int i = 0; i < arr.length; i++) {
+                    int a = arr[i];
 
+                    Optional<Pizza> foundPizza = pizzas.stream()
+                            .filter(p -> p.getPizzaId() == a)
+                            .findFirst();
 
-        //loop thorugh array of pizza id's and add to pizzasOrdered
-        for (int i = 0; i < arr.length; i++) {
-            int a = arr[i];
-
-            Optional<Pizza> foundPizza = pizzas.stream()
-                    .filter(p -> p.getPizzaId() == a)
-                    .findFirst();
-            foundPizza.ifPresent(pizzasOrdered::add);
+                    if (foundPizza.isEmpty()) {
+                        isPizzaIDsNotValid = true;
+                        System.out.println("Pizza ID " + a + " eksisterer ikke!");
+                        break;
+                    } else {
+                        foundPizza.ifPresent(pizzasOrdered::add);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Du må kun indtaste tal delt med mellemrum");
+                isPizzaIDsNotValid = true;
+            }
         }
-        //TODO lav sådan at hvis indtastet 145 bliver til 0145
-        System.out.println("Skriv tidspunkt for afhenting: ");
-        String pickUpTime = scanner.nextLine();
+
+
+        String pickUpTime;
+        do{
+            System.out.println("Skriv tidspunkt for afhenting på 4 cifre fx: '1125': ");
+            pickUpTime = scanner.nextLine();
+        }
+        //TODO validate input is a "real" time
+        while(pickUpTime.length() != 4);
 
         //TODO kommentar på order
 
@@ -127,7 +187,6 @@ public class Main {
         }
     }
 
-    //TODO update ordercount based on activeOrderArchive
 
     //TODO
     public static void removeOrder(Scanner scanner, FileHandler fileHandler) {

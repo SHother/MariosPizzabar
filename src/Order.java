@@ -65,7 +65,7 @@ public class Order implements Comparable<Order> {
 
     }
 
-    //TODO tilføj at hvis 2 eller flere af den samme pizza skal laves, så print fx: "2 x Cacciatore"
+    //TODO tilføj at hvis 2 eller flere af den samme pizza skal laves, så print fx: "2 x Cacciatore" - nice to have
     @Override
     public String toString() {
         String pizzasOrderedDisplay = "";

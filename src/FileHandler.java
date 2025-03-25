@@ -50,7 +50,7 @@ public class FileHandler {
      * Gemmer en færgjort ordre i OrdersCompleted.txt.
      *
      * @param order Ordren, der skal gemmes.
-     */ //TODO tilføj funktion i main menu at afslutte order
+     */
     public void saveOrderToArchive(Order order) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ordersCompletedFilename, true))) {
             StringBuilder pizzaNames = new StringBuilder(); // Samler pizzanavne i en streng
@@ -88,7 +88,7 @@ public class FileHandler {
         }
     }
 
-    //TODO sorter efter pickuptime
+
     public void saveActiveOrders(Order order) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(activeOrdersFilename, true))) {
             StringBuilder pizzaNames = new StringBuilder(); // Samler pizzanavne i en streng

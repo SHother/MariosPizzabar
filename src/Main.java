@@ -20,10 +20,7 @@ public class Main {
         System.out.println(activeOrders);
 
 
-        //fileHandler.saveActiveOrders(testOrder);
-        //activeOrders.add(testOrder);
 
-        //fileHandler.saveOrderToArchive(testOrder);
         while (true) {
             run();
         }
@@ -41,8 +38,7 @@ public class Main {
         System.out.println("5. Marker ordre som udleveret");
         System.out.print("Vælg en mulighed: ");
 
-
-
+        
         FileHandler fileHandler = new FileHandler();
         Scanner scanner = new Scanner(System.in);
         int choice = getValidInt(scanner);
@@ -74,7 +70,8 @@ public class Main {
                 (o1, o2) -> o1.getPickUpTime().compareTo(o2.getPickUpTime()));
 
         for (Order order : activeOrders) {
-            System.out.println(order);
+            System.out.println(order + FileHandler.lineBreaker());
+
         }
     }
     public static void displayMenu(){

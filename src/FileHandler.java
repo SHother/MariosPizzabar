@@ -6,18 +6,7 @@ public class FileHandler {
 
     public FileHandler(){}
 
-
-    //TODO
-    //Should add one order to the file
-    public void saveOrder(Order order){
-    }
-
-    //TODO
-    public ArrayList<Order> getOldOrders(){
-        return null;
-    }
-
-    //TODO
+    //TODO getMenu() - Cancelled
     public ArrayList<Order> getMenu(){
         return null;
     }
@@ -167,6 +156,11 @@ public class FileHandler {
             System.err.println("SUM TING WONG, CALL SOREN");
         }
         return allActiveOrders;
+    }
+
+    //TODO readOldOrders()
+    public ArrayList<Order> readOldOrders(){
+        return null;
     }
 
     public static String lineBreaker() {

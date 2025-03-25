@@ -13,6 +13,8 @@ public class Main {
 
         //reads any potential active orders after a "potential" crash
         activeOrders = fileHandler.readActiveOrders();
+        resumeOrderCounter();
+
         System.out.println(activeOrders);
         activeOrders.sort(null);
         System.out.println(activeOrders);
@@ -35,7 +37,7 @@ public class Main {
         System.out.println("1. Opret ny ordre");
         System.out.println("2. Fjern ordre");
         System.out.println("3. Se aktive ordrer");
-        System.out.println("4. Se mest købte pizzaer");
+        System.out.println("4. Se menu" );
         System.out.println("5. Marker ordre som udleveret");
         System.out.print("Vælg en mulighed: ");
 
@@ -171,7 +173,7 @@ public class Main {
         //TODO validate input is a "real" time
         while(pickUpTime.length() != 4);
 
-        //TODO kommentar på order
+        //TODO kommentar på order - nice to have
 
         Order newOrder = new Order(customerName, pizzasOrdered, pickUpTime, costumerPhone);
         System.out.println(newOrder
@@ -188,7 +190,6 @@ public class Main {
     }
 
 
-    //TODO
     public static void removeOrder(Scanner scanner, FileHandler fileHandler) {
         //Should request input for the ID of and active order and then remove that order
         System.out.println("Indtast ordre-ID for at fjerne en ordre: ");
@@ -228,7 +229,6 @@ public class Main {
         }
     }
 
-    //TODO Create a method that scans the terminal for a new line and returns an int if one is found
     //if no int is found, promt the user to give a valid int
     public static int getValidInt (Scanner scanner){
         scanner.nextLine();
@@ -239,17 +239,19 @@ public class Main {
         return scanner.nextInt();
     }
 
-    //TODO
+
+    //TODO showStartMessage() - nice to have
     public static void showStartMessage () {
     }
 
-    //TODO
+    //TODO showTotalNumOfOrders () - Nice to have
     public static int showTotalNumOfOrders () {
         return 0;
     }
 
-    //TODO takes the id of a specific pizza and return the number of pizzas sold of that type
-    public static int pizzasSoldofType (int pizzaID){
+    //TODO pizzasSoldOfType() - Nice to have
+    //takes the id of a specific pizza and return the number of pizzas sold of that type
+    public static int pizzasSoldOfType (int pizzaID){
         return 0;
     }
 

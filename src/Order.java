@@ -96,7 +96,6 @@ public class Order implements Comparable<Order> {
         return this.pickUpTime.compareTo(that.pickUpTime);
     }
 
-
     public void addPizzaToOrder(Pizza order){
         pizzasOrdered.add(order);
     }
@@ -135,7 +134,6 @@ public class Order implements Comparable<Order> {
     public void setPrice(double price) {
         this.price = price;
     }
-
 }
 
 

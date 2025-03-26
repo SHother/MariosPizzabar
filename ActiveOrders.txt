@@ -1,7 +1,2 @@
 Next Pizza to be made:
 --------------------
-Bestilling ,
-1245,
-1;2;3,
-Vesuvio;Amerikaner;Cacciatore,1,167.0,thais,123123
---------------------

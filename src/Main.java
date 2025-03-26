@@ -46,12 +46,10 @@ public class Main {
             case 3:
                 displayOrders();
                 break;
-
             case 4:
                 showMenu();
                 break;
             case 5:
-                //TODO test deliver order
                 deliverOrder(scanner, fileHandler);
                 break;
             case 6:
@@ -60,13 +58,17 @@ public class Main {
     }
     //Method for delivering order
     public static void displayOrders() {
-        Collections.sort(activeOrders,
-                (o1, o2) -> o1.getPickUpTime().compareTo(o2.getPickUpTime()));
+        if (activeOrders.isEmpty()) {
+            System.out.println("Ingen aktive ordre ");
+        } else {
+            activeOrders.sort(
+                    (o1, o2) -> o1.getPickUpTime().compareTo(o2.getPickUpTime())
+            );
 
-        for (Order order : activeOrders) {
-            System.out.println(FileHandler.lineBreaker());
-            System.out.println(order + FileHandler.lineBreaker());
-
+            for (Order order : activeOrders) {
+                System.out.println(FileHandler.lineBreaker());
+                System.out.println(order + FileHandler.lineBreaker());
+            }
         }
     }
 
@@ -169,17 +171,7 @@ public class Main {
         //Should request input for the ID of and active order and then remove that order
         System.out.println("Indtast ordre-ID for at fjerne en ordre: ");
 
-        int orderId;
-        while (true) {
-            if (scanner.hasNextInt()) {
-                orderId = readValidInt(scanner);
-                scanner.nextLine(); // Håndterer newline
-                break;
-            } else {
-                System.out.println("Ugyldigt input. Indtast et gyldigt ordre-ID.");
-                scanner.next(); // Forbruger ugyldigt input
-            }
-        }
+        int orderId = readValidInt(scanner);
 
         // Finder ordren med det givne ordre-ID
         Optional<Order> orderToRemove = activeOrders.stream()
@@ -189,18 +181,17 @@ public class Main {
         // Fjerner ordren, hvis den findes
         if (orderToRemove.isPresent()) {
             activeOrders.remove(orderToRemove.get());
+            fileHandler.updateActiveOrders(activeOrders);
             System.out.println("Ordren med ID " + orderId + " er blevet fjernet.");
-
         } else {
             System.out.println("Ingen ordre fundet med ID " + orderId + ".");
         }
-
     }
 
     public static void showMenu() {
         System.out.println("\n--- Pizzamenu ---");
         for (Pizza pizza : pizzas) {
-            System.out.println(pizza.getPizzaId() + ": " + pizza.getName() + " - " + pizza.getPrice() + "kr. (" + pizza.getToppings() + ")");
+            System.out.println(pizza.getPizzaId() + ": " + pizza.getName() + "\t" + pizza.getPrice() + "kr. (" + pizza.getToppings() + ")");
         }
     }
 
@@ -262,7 +253,6 @@ public class Main {
     public static int pizzasSoldOfType (int pizzaID){
         return 0;
     }
-
 
 
     //Creates an Array of the Pizzas on the menu for use in the program

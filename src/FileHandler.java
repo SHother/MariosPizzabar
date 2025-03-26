@@ -166,11 +166,6 @@ public class FileHandler {
         return allActiveOrders;
     }
 
-    //TODO readOldOrders()
-    public ArrayList<Order> readOldOrders(){
-        return null;
-    }
-
     public static String lineBreaker() {
         return "\n--------------------";
     }

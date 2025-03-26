@@ -1,31 +1,14 @@
-/*import java.util.ArrayList;
-
-public class FileHandler {
-    private final String menuFilename = "Menu.txt";
-    private final String ordersFilename = "Orders.txt";
-
-    public FileHandler(){}
-
-    //TODO getMenu() - Cancelled
-    public ArrayList<Order> getMenu(){
-        return null;
-    }
-
-}
-*/
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * FileHandler klassen håndterer læsning og skrivning af data til filer.
- * Den arbejder med to filer: Menu.txt og Orders.txt.
- */
+import static java.io.FileDescriptor.in;
+
+
+//FileHandler klassen håndterer læsning og skrivning af data til filer.
 public class FileHandler {
-    private final String menuFilename = "Menu.txt"; // Filnavn for pizzamenuen
     private final String ordersCompletedFilename = "OrdersCompleted.txt"; // Filnavn for ordrer
     private final String activeOrdersFilename = "ActiveOrders.txt";
 
@@ -35,11 +18,9 @@ public class FileHandler {
     }
 
 
-    /**
-     * Gemmer en færgjort ordre i OrdersCompleted.txt.
-     *
-     * @param order Ordren, der skal gemmes.
-     */
+
+//Gemmer en færgjort ordre i OrdersCompleted.txt.
+//@param order Ordren, der skal gemmes.
     public void saveOrderToArchive(Order order) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ordersCompletedFilename, true))) {
             StringBuilder pizzaNames = new StringBuilder(); // Samler pizzanavne i en streng
@@ -65,6 +46,7 @@ public class FileHandler {
         }
     }
 
+    //Overskriver "ActiveOrders.txt" med den information den modtager
     public void updateActiveOrders(ArrayList<Order> activeOrders) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(activeOrdersFilename))) {
             bw.write("Next Pizza to be made:" + lineBreaker() + "\n");
@@ -73,11 +55,11 @@ public class FileHandler {
         }
 
         for (Order order : activeOrders) {
-            saveOrderToArchive(order);
+            saveActiveOrders(order);
         }
     }
 
-
+    //Tilføjer en order til "ActiveOrders.txt"
     public void saveActiveOrders(Order order) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(activeOrdersFilename, true))) {
             StringBuilder pizzaNames = new StringBuilder(); // Samler pizzanavne i en streng
@@ -119,6 +101,32 @@ public class FileHandler {
         }
     }
 
+    public void displayArchivedOrders(){
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(ordersCompletedFilename));
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.err.println("Fejl ved læsning af ordre");
+        }
+    }
+
+    public ArrayList<Order> readArchivedOrders(){
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(ordersCompletedFilename));
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.err.println("Fejl ved læsning af ordre");
+        }
+        return null;
+    }
+
+    //Læser "ActiveOrders.txt" og formattere texten til en liste af ordre
     public ArrayList<Order> readActiveOrders(){
         ArrayList<Order> allActiveOrders = new ArrayList<>();
 

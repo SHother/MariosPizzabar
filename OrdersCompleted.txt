@@ -6,3 +6,13 @@
 4,167.0,1145,Vesuvio;Amerikaner;Cacciatore
 4,179.0,2222,Bertil;Silvia;Victoria
 2,167.0,1900,Vesuvio;Amerikaner;Cacciatore
+2,167.0,1245,Vesuvio;Amerikaner;Cacciatore
+3,185.0,1235,Carbonara;Dennis;Bertil
+1,167.0,1245,Vesuvio;Amerikaner;Cacciatore
+2,185.0,1212,Vesuvio;Dennis;Carbonara
+2,185.0,1212,Vesuvio;Dennis;Carbonara
+1,167.0,1245,Vesuvio;Amerikaner;Cacciatore
+3,61.0,2345,Toronto
+1,167.0,1245,Vesuvio;Amerikaner;Cacciatore
+2,185.0,1212,Vesuvio;Dennis;Carbonara
+2,185.0,1212,Vesuvio;Dennis;Carbonara

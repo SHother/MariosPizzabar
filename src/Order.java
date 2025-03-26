@@ -6,7 +6,7 @@ import java.util.ArrayList;
 //Class that handles the specific orders
 public class Order implements Comparable<Order> {
 
-    private static int orderCount = 1;
+    private static int orderCount = 0;
     private int orderId;
     private String customerName;
     private ArrayList<Pizza> pizzasOrdered;
@@ -39,7 +39,7 @@ public class Order implements Comparable<Order> {
         this.price = pizzasOrdered.stream().mapToDouble(Pizza::getPrice).sum();
     }
 
-// Constructor til
+    // Constructor til brug af FileReader.readActiveOrders()
     public Order(int id, String name, ArrayList<Pizza> pizzasOrdered, double price, String pickUpTime, int costumerPhone){
         this.orderId = id;
         this.customerName = name;
@@ -56,7 +56,14 @@ public class Order implements Comparable<Order> {
         } else {
             this.orderDate = LocalDate.now();
         }
+    }
 
+    // Constructor til brug af FileReader.readArchivedOrders()
+    public Order(int id, double price, String pickUpTime, ArrayList<Pizza> pizzasOrdered){
+        this.orderId = id;
+        this.price = price;
+        this.pickUpTime = pickUpTime;
+        this.pizzasOrdered = pizzasOrdered;
     }
 
     //TODO tilføj at hvis 2 eller flere af den samme pizza skal laves, så print fx: "2 x Cacciatore" - nice to have

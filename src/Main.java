@@ -1,11 +1,10 @@
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Main {
 
     private static ArrayList<Order> activeOrders = new ArrayList<>();
     public static ArrayList<Pizza> pizzas = new ArrayList<>();
-    private static Order testOrder;
+
 
     public static void main(String[] args) {
         FileHandler fileHandler = new FileHandler();
@@ -15,34 +14,27 @@ public class Main {
         activeOrders = fileHandler.readActiveOrders();
         resumeOrderCounter();
 
-        System.out.println(activeOrders);
-        activeOrders.sort(null);
-        System.out.println(activeOrders);
-
-
-
         while (true) {
-            run();
+            run(fileHandler);
         }
     }
 
 
     //1. opret order, 2. fjern ordre, 3. se ordre, 4. se sorteret mest købte pizzaer, 5. Afslut order
 
-    public static void run() {
+    public static void run(FileHandler fileHandler) {
         System.out.println("\nMario's Pizzabar ");
         System.out.println("1. Opret ny ordre");
         System.out.println("2. Fjern ordre");
         System.out.println("3. Se aktive ordrer");
         System.out.println("4. Se menu" );
         System.out.println("5. Marker ordre som udleveret");
+        System.out.println("6. Vis udførte ordre");
         System.out.print("Vælg en mulighed: ");
 
-        
-        FileHandler fileHandler = new FileHandler();
         Scanner scanner = new Scanner(System.in);
-        int choice = getValidInt(scanner);
 
+        int choice = readValidInt(scanner);
 
         switch (choice) {
             case 1:
@@ -56,62 +48,53 @@ public class Main {
                 break;
 
             case 4:
-                displayMenu();
+                showMenu();
                 break;
             case 5:
                 //TODO test deliver order
                 deliverOrder(scanner, fileHandler);
                 break;
+            case 6:
+                showCompletedOrders(fileHandler);
         }
     }
-
+    //Method for delivering order
     public static void displayOrders() {
         Collections.sort(activeOrders,
                 (o1, o2) -> o1.getPickUpTime().compareTo(o2.getPickUpTime()));
 
         for (Order order : activeOrders) {
+            System.out.println(FileHandler.lineBreaker());
             System.out.println(order + FileHandler.lineBreaker());
 
         }
     }
-    public static void displayMenu(){
-
-        for (Pizza pizza : pizzas ) {
-            System.out.println(pizza);
-        }
-    }
-
-    //Method for delivering order
 
     public static void deliverOrder(Scanner scanner, FileHandler fileHandler) {
         System.out.println("Indtast ordernummer på orderen der er udleveret");
 
-        int a = getValidInt(scanner);
+        int a = readValidInt(scanner);
 
         Optional<Order> foundOrder = activeOrders.stream()
                 .filter(p -> p.getOrderId() == a)
                 .findFirst();
 
         if (foundOrder.isPresent()) {
-                foundOrder.ifPresent(activeOrders::remove);
-                fileHandler.updateActiveOrders(activeOrders);
-                fileHandler.saveOrderToArchive(foundOrder.get());
-                System.out.println("Order " + foundOrder.get().getOrderId() + " delivered! ");
+            //foundOrder.ifPresent(activeOrders::remove);
+            //TODO slet system print og tjek
+
+            activeOrders.remove(foundOrder.get());
+            fileHandler.updateActiveOrders(activeOrders);
+            fileHandler.saveOrderToArchive(foundOrder.get());
+
+            System.out.println("Order " + foundOrder.get().getOrderId() + " delivered! ");
         } else {
             System.out.println("Order not found!");
         }
     }
 
-
-    public static void resumeOrderCounter() {
-        if (!activeOrders.isEmpty()) {
-            int maxOrderCounter = activeOrders.stream()
-                            .max(Comparator.comparing(Order::getOrderId))
-                            .get().getOrderId();
-            Order.setOrderCount(maxOrderCounter);
-        } else {
-            System.out.println("Ingen aktive ordre fundet ved opstart");
-        }
+    public static void showCompletedOrders(FileHandler fileHandler) {
+        fileHandler.displayArchivedOrders();
     }
 
 
@@ -119,20 +102,21 @@ public class Main {
         ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
 
         System.out.println("Skriv kundens navn: ");
-        scanner.nextLine();
-        String customerName = scanner.nextLine();
+
+        String customerName = readValidString(scanner);
 
 
         System.out.println("Skriv kundens telefonnummer: ");
-        int costumerPhone = getValidInt(scanner);
+        int costumerPhone = readValidInt(scanner);
 
 //TODO test om dette virker
+
         boolean isPizzaIDsNotValid = true;
         while (isPizzaIDsNotValid) {
             isPizzaIDsNotValid = false;
             System.out.print("Vælg pizzaer, adskilt af mellemrum");
-            scanner.nextLine();
-            String pizzaChoice = scanner.nextLine();
+
+            String pizzaChoice = readValidString(scanner);
 
             try {
                 int[] arr = Arrays.stream(pizzaChoice.split(" "))
@@ -161,14 +145,9 @@ public class Main {
             }
         }
 
-
-        String pickUpTime;
-        do{
-            System.out.println("Skriv tidspunkt for afhenting på 4 cifre fx: '1125': ");
-            pickUpTime = scanner.nextLine();
-        }
-        //TODO validate input is a "real" time
-        while(pickUpTime.length() != 4);
+        System.out.println("Skriv tidspunkt for afhenting på 4 cifre fx: '1125': ");
+        String pickUpTime = readValidString(scanner);
+        pickUpTime = validateTimeInput(pickUpTime, scanner);
 
         //TODO kommentar på order - nice to have
 
@@ -186,7 +165,6 @@ public class Main {
         }
     }
 
-
     public static void removeOrder(Scanner scanner, FileHandler fileHandler) {
         //Should request input for the ID of and active order and then remove that order
         System.out.println("Indtast ordre-ID for at fjerne en ordre: ");
@@ -194,7 +172,7 @@ public class Main {
         int orderId;
         while (true) {
             if (scanner.hasNextInt()) {
-                orderId = getValidInt(scanner);
+                orderId = readValidInt(scanner);
                 scanner.nextLine(); // Håndterer newline
                 break;
             } else {
@@ -211,8 +189,8 @@ public class Main {
         // Fjerner ordren, hvis den findes
         if (orderToRemove.isPresent()) {
             activeOrders.remove(orderToRemove.get());
-
             System.out.println("Ordren med ID " + orderId + " er blevet fjernet.");
+
         } else {
             System.out.println("Ingen ordre fundet med ID " + orderId + ".");
         }
@@ -227,15 +205,48 @@ public class Main {
     }
 
     //if no int is found, promt the user to give a valid int
-    public static int getValidInt (Scanner scanner){
-        scanner.nextLine();
-        while (!scanner.hasNextInt()){
+    public static int readValidInt(Scanner scanner) {
+        while (!scanner.hasNextInt()) {
             System.out.println("Not a valid number. Try again:");
             scanner.nextLine();
         }
-        return scanner.nextInt();
+        int returnVal = scanner.nextInt();
+        scanner.nextLine();
+        return returnVal;
     }
 
+    public static String readValidString(Scanner scanner) {
+        String userInput;
+        while (true) {
+            userInput = scanner.nextLine();
+            if (userInput.matches("^[^,;]*$")) {
+                break;
+            } else {
+                System.out.println("Der må ikke være , eller ; i inputtet");
+            }
+        }
+        return userInput;
+    }
+
+    public static String validateTimeInput(String s, Scanner scanner) {
+        while (!(s.matches("^([01][0-9]|2[0-3])[0-5][0-9]$"))) {
+            System.out.println("Tidsformat ikke indtastet korrekt, indtast nyt afhentningstidpunkt: ");
+            s = readValidString(scanner);
+
+        }
+        return s;
+    }
+
+    public static void resumeOrderCounter() {
+        if (!activeOrders.isEmpty()) {
+            int maxOrderCounter = activeOrders.stream()
+                    .max(Comparator.comparing(Order::getOrderId))
+                    .get().getOrderId();
+            Order.setOrderCount(maxOrderCounter + 1);
+        } else {
+            System.out.println("Ingen aktive ordre fundet ved opstart");
+        }
+    }
 
     //TODO showStartMessage() - nice to have
     public static void showStartMessage () {
@@ -251,6 +262,8 @@ public class Main {
     public static int pizzasSoldOfType (int pizzaID){
         return 0;
     }
+
+
 
     //Creates an Array of the Pizzas on the menu for use in the program
     public static void createPizzas () {
@@ -268,7 +281,7 @@ public class Main {
         pizzas.add(new Pizza(12, "Le Blissola", 61, "tomatsauce, ost, skinke, rejer, oregano"));
         pizzas.add(new Pizza(13, "Venezia", 61, "tomatsauce, ost, bacon, oregano"));
         pizzas.add(new Pizza(14, "Mafia", 61, "tomatsauce, ost, pepperoni, bacon, løg, oregano"));
-        testOrder = new Order("thais", pizzas, "1845", 22101213);
+
 
     }
 }

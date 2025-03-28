@@ -20,8 +20,6 @@ public class Main {
     }
 
 
-    //1. opret order, 2. fjern ordre, 3. se ordre, 4. se sorteret mest købte pizzaer, 5. Afslut order
-
     public static void run(FileHandler fileHandler) {
         System.out.println("\nMario's Pizzabar ");
         System.out.println("1. Opret ny ordre");
@@ -61,9 +59,7 @@ public class Main {
         if (activeOrders.isEmpty()) {
             System.out.println("Ingen aktive ordre ");
         } else {
-            activeOrders.sort(
-                    (o1, o2) -> o1.getPickUpTime().compareTo(o2.getPickUpTime())
-            );
+            activeOrders.sort(null);
 
             for (Order order : activeOrders) {
                 System.out.println(FileHandler.lineBreaker());
@@ -98,7 +94,6 @@ public class Main {
     public static void showCompletedOrders(FileHandler fileHandler) {
         fileHandler.displayArchivedOrders();
     }
-
 
     public static void createOrder(Scanner scanner, FileHandler fileHandler) {
         ArrayList<Pizza> pizzasOrdered = new ArrayList<>();
@@ -271,7 +266,6 @@ public class Main {
         pizzas.add(new Pizza(12, "Le Blissola", 61, "tomatsauce, ost, skinke, rejer, oregano"));
         pizzas.add(new Pizza(13, "Venezia", 61, "tomatsauce, ost, bacon, oregano"));
         pizzas.add(new Pizza(14, "Mafia", 61, "tomatsauce, ost, pepperoni, bacon, løg, oregano"));
-
 
     }
 }

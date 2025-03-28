@@ -1,2 +1,17 @@
 Next Pizza to be made:
 --------------------
+Bestilling ,
+1550,
+5;12;3;5;1;7;6;8;8;8,
+Dennis;Le Blissola;Cacciatore;Dennis;Vesuvio;Silvia;Bertil;Victoria;Victoria;Victoria,5,606.0,124 d,124124
+--------------------
+Bestilling ,
+2300,
+4;6;7,
+Carbonara;Bertil;Silvia,3,181.0,qq121f,12213
+--------------------
+Bestilling ,
+1234,
+5,
+Dennis,2,65.0,test,124124
+--------------------

@@ -11,3 +11,4 @@
 1,167.0,1245,Vesuvio;Amerikaner;Cacciatore
 2,185.0,1212,Vesuvio;Dennis;Carbonara
 2,232.0,1145,Dennis;Bertil;Cacciatore;Amerikaner
+1,126.0,0010,Dennis;Le Blissola

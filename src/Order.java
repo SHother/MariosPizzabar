@@ -6,7 +6,7 @@ import java.util.ArrayList;
 //Class that handles the specific orders
 public class Order implements Comparable<Order> {
 
-    private static int orderCount = 0;
+    private static int orderCount = 1;
     private int orderId;
     private String customerName;
     private ArrayList<Pizza> pizzasOrdered;
@@ -92,12 +92,7 @@ public class Order implements Comparable<Order> {
         } else if (this.orderDate.isAfter(that.orderDate)){
             return 1;
         }
-
         return this.pickUpTime.compareTo(that.pickUpTime);
-    }
-
-    public void addPizzaToOrder(Pizza order){
-        pizzasOrdered.add(order);
     }
 
     public int getOrderId(){
@@ -117,6 +112,10 @@ public class Order implements Comparable<Order> {
     }
     public ArrayList<Pizza> getPizzasOrdered() {
         return pizzasOrdered;
+    }
+
+    public void addPizzaToOrder(Pizza order){
+        pizzasOrdered.add(order);
     }
 
     public static void setOrderCount(int orderCount) {

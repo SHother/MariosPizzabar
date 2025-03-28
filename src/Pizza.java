@@ -32,6 +32,7 @@ public class Pizza implements Comparable<Pizza>{
     public String toString() {
         return "Nr " + pizzaId + ". " + name + ": " + toppings + " - " + price + "kr";
     }
+
     @Override
     public int compareTo(Pizza other){
         return this.pizzaId - other.pizzaId;

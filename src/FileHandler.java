@@ -4,9 +4,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.io.FileDescriptor.in;
-
-
 //FileHandler klassen håndterer læsning og skrivning af data til filer.
 public class FileHandler {
     private final String ordersCompletedFilename = "OrdersCompleted.txt"; // Filnavn for ordrer
@@ -17,10 +14,7 @@ public class FileHandler {
     public FileHandler() {
     }
 
-
-
-//Gemmer en færgjort ordre i OrdersCompleted.txt.
-//@param order Ordren, der skal gemmes.
+    //Gemmer en færgjort ordre i OrdersCompleted.txt.
     public void saveOrderToArchive(Order order) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ordersCompletedFilename, true))) {
             StringBuilder pizzaNames = new StringBuilder(); // Samler pizzanavne i en streng
@@ -113,6 +107,7 @@ public class FileHandler {
         }
     }
 
+    //Bruges ikke
     public ArrayList<Order> readArchivedOrders(){
         try {
             BufferedReader br = new BufferedReader(new FileReader(ordersCompletedFilename));
@@ -159,7 +154,6 @@ public class FileHandler {
                 Order newOrder = new Order(orderID, customerName, pizzasOrdered, price, pickUpTime, costumerPhone);
                 allActiveOrders.add(newOrder);
             }
-
         }catch(IOException e){
             System.err.println("SUM TING WONG, CALL SOREN");
         }
